@@ -22,6 +22,7 @@ body {
     --small: 1rem;
     --xsmall: 0.75rem;
     font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
 }
 
 .flex-wrapper {
@@ -74,6 +75,32 @@ body {
 
 .book-info {
     grid-area: book-info;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.button-container {
+    grid-area: icons;
+    margin: auto 16px auto auto;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.remove-book-button {
+    width: var(--large);
+    cursor: pointer;
+}
+
+.read-book-button {
+    width: var(--large);
+    cursor: pointer;
+}
+
+.remove-book-button:hover{
+    transform: scale(1.1);
+    content: url("./images/delete-empty.svg");
 }
 
 .add-book-button {

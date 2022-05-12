@@ -18,18 +18,42 @@ Book.prototype.getElement = function(index) {
     title.textContent = this.title;
     title.classList.add('book-title','text-medium', 'text-bold');
 
+    let bookInfoContainer = document.createElement('div');
+    bookInfoContainer.classList.add('book-info');
+
     let bookInfo = document.createElement('div');
     bookInfo.textContent = this.author + ' - ' + this.pages + ' pages';
-    bookInfo.classList.add('book-info', 'text-small');
+    bookInfo.classList.add('text-small');
 
-    let removeButton = document.createElement('button');
-    removeButton.textContent = 'Remove';
-    removeButton.classList.add('remove-button');
+    let isRead = document.createElement('div');
+    isRead.textContent = this.isRead ? 'Read' : 'Not read';
+    isRead.classList.add('text-small');
+    isRead.style.color = this.isRead ? '#3c8c38' : '#a20606';
+
+    let buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+
+    let removeButton = document.createElement('img');
+    removeButton.setAttribute('src', './images/delete.svg');
+    removeButton.classList.add('remove-book-button');
     removeButton.addEventListener('click', removeBookFromLibrary);
 
+    let readButton = document.createElement('img');
+    if (this.isRead) {
+        readButton.setAttribute('src', './images/book-cancel.svg');
+    } else {
+        readButton.setAttribute('src', './images/book-check.svg');
+    }
+    readButton.classList.add('read-book-button');
+    readButton.addEventListener('click', readBookToggle);
+
     element.appendChild(title);
-    element.appendChild(bookInfo);
-    element.appendChild(removeButton);
+    bookInfoContainer.appendChild(bookInfo);
+    bookInfoContainer.appendChild(isRead);
+    element.appendChild(bookInfoContainer);
+    buttonContainer.appendChild(readButton);
+    buttonContainer.appendChild(removeButton);
+    element.appendChild(buttonContainer);
 
     return element;
 }
@@ -67,17 +91,23 @@ function closeAddBookModal() {
     modal.style.display = 'none';
 }
 
+function readBookToggle(e) {
+    let index = e.target.parentElement.parentElement.getAttribute('data-index');
+    library[Number(index)].isRead = !library[Number(index)].isRead;
+    createLibraryPage(library);
+}
+
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     let formData = new FormData(form);
-    addBookToLibrary(formData.get('title'), formData.get('author'), formData.get('pages'), formData.get('isRead'));
+    addBookToLibrary(formData.get('title'), formData.get('author'), formData.get('pages'), formData.get('isRead') === 'on');
     createLibraryPage(library);
     closeAddBookModal();
     form.reset();
 });
 
-addBookToLibrary("A Game of Thrones", "George R.R. Martin", 400, true);
+addBookToLibrary("A Game of Thrones", "George R.R. Martin", 400, false);
 addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", 300, true);
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 300, true);
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 300, false);
 addBookToLibrary("Harry Potter", "J.K. Rowling", 400, true);
 createLibraryPage(library);
